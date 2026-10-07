@@ -1,5 +1,5 @@
 /* Survey Flecha Seca: keeps the app on the phone so it opens without internet. */
-const CACHE = 'sfs-v1';
+const CACHE = 'sfs-v2';
 const ASSETS = ['./', 'index.html', 'manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png', 'icons/icon-maskable-512.png'];
 const FONT_CSS = 'https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@600;700&display=swap';
 const FONT_HOSTS = ['fonts.googleapis.com', 'fonts.gstatic.com'];

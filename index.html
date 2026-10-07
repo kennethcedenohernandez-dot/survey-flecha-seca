@@ -203,13 +203,13 @@ svg.i { fill: none; stroke: currentColor; stroke-width: 2.5; stroke-linecap: rou
 </div>
 <div id="sheet-root"></div>
 <div class="toast" id="toast" role="status" hidden></div>
-<input type="file" id="file-in" accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" hidden>
+<input type="file" id="file-in" accept=".xlsx,.csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/csv,text/comma-separated-values" hidden>
 
 <script>
 (function () {
 'use strict';
 
-var APP_VERSION = '1.0';
+var APP_VERSION = '1.1';
 var CAT = [["SAN","SANA"],["EDO","Enfermedad descomocida en observación (EDO)"],["ARJ","Anillo rojo/hoja pequeña (ARJ)"],["PES","Manchas foliares por Pestalotiopsis sp y otros hongos asociados (PES)"],["MYE","Mycosphaerella elaeidis (MYE)"],["MAR","Marchitez sorpresiva (MAR)"],["ACL","Anillo clorótico (ACL)"],["MLT","Marchitez letal (MLT)"],["MAF","Marchitez por Fusarium (MAF)"],["PFC","Pudrición de flecha/arqueo foliar comun (PFC)"],["PSC","Pudrición severa del cogollo (PSC)"],["FSR","Flecha Seca en recupéración (FSR)"],["FSF","Flecha Seca Recuperada con fruta (FSF)"],["FSA","Flecha Seca con solo hojas amarillas (FSA)"],["FST","Fleca Seca en recuperación con el cogollo torcido (FST)"],["PMT","Pudrición media del tallo (PMT)"],["MAN","Mancha anular (MAN)"],["PSR","Pudrición comun de flecha en recuperación (PSR)"],["PBH","Pudrición basal humeda (PBH)"],["PBS","Pudricion basal seca (PBS)"],["PBC","Pudrición basal corchosa (PBC)"],["PBG","Pudrición basal por Ganoderma (PBG)"],["PAT","Pudrición alta del tallo (PAT)"],["FS1","Flecha Seca clásica (FS1)"],["FS2","Flecha Seca clásica (FS2)"],["FS3","Flecha Seca clásica (FS3)"],["FS4","Flecha Seca clásica (FS4)"],["RAY","Daños por rayos (RAY)"],["FUE","Daño por fuego (FUE)"],["FCV","Fractura (doblamiento) de la corona por viento (FCV)"],["HER","Daño por herbicidas (HER)"],["PEV","Palma inyectada (envenenada) con herbicida (PEV)"],["FER","Quema o daño por fertilizante (FER)"],["DCR","Doblamiento de la corona en recuperación (DCR)"],["PRQ","Palma raquítica (PRQ)"],["FAL","Falla (FAL)"],["ANG","Anormalidad genética (ANG)"],["PIS","Palmas pisíferas e improductivas (PIS)"],["DRE","Mal drenaje (DRE)"],["DEH","Déficit hídrico (DEH)"],["PVI","Palma virada y/o desraizada (PVI)"],["POV","Palma voluntaria (POV)"],["DCE","Daño por corriente eléctrico (DCE)"],["PMS","Palma mal sembrada (PMS)"],["PMA","Palma muy alta (PMA)"],["PAR","Pudrición apical del racimo (PAR)"],["FAR","Falla de racimos (FAR)"],["RAN","Racimos o inflorescencias anormales (RAN)"],["DEN","Deficiencia de nitrogeno (DEN)"],["DEP","Deficiencia de fosforo (DEP)"],["DEB","Deficiencia de boro (DEB)"],["DEK","Manchas anaranjadas (hojas viejas) o amarillamiento medio de la corona por deficiencia de potasio (DEK)"],["DMG","Deficiencia de magnesio (DMG)"],["RYB","Raya blanca (RYB)"],["DK1","Deficiencia de potasio (DK1)"],["DK2","Deficiencia de potasio (DK2)"],["DK3","Deficiencia de potasio (DK3)"],["DK4","Deficiencia de potasio (DK4)"],["PNI","Plaga defoliadora no identificada y en observación (PNI)"],["HOR","Hormigas arrieras o cortadoras (zompopas) (HOR)"],["OPC","Opsiphanes cassina (OPC)"],["SIM","Acharia hyperoche (Sibine megasonoides) (SIM)"],["SIF","Sibine fusca (SIF)"],["OIK","Oiketicus kirby (OIK)"],["STC","Stenoma cecropia (STC)"],["AUT","Automeris sp. (AUT)"],["REE","Ácaros: Retracrus elaeidis (REE)"],["CCH","Chinches chupadores (CCH)"],["CHA","Saltamontes o chapulines (CHA)"],["CIG","Chupadores homópteros (cigarras) (CIG)"],["CCN","Cochinillas (CCN)"],["RHP","Rhynchophorus palmarum (RHP)"],["STA","Strategus aloeus (STA)"],["RHB","Rhinosthomus barbirostrib (RHB)"],["CYD","Cyparissius (Castnia) daedaus (CYD)"],["SAV","Sagalassa valida (SAV)"],["DUA","Durrantia sp. (DUA)"],["RAT","Ratas (RAT)"],["GAN","Daño por ganado (GAN)"],["CER","Daño por cerdos (CER)"],["ORT","Taltuzas (ORT)"],["CAP","Otros Roedores (capibaras) (CAP)"],["PER","Aves treapadoras (periquitos) (PER)"],["ZOP","Daño por zopilotes (ZOP)"],["DAR","Daño por ardilas (DAR)"],["ADA","Arbol dentro de area"],["DCV","Doblamiento de la corona por viento"],["ARF","Arqueo foliar"],["HORR","Hormigas recuperando"]];
 
 /* ---------- Catalogs ---------- */
@@ -228,7 +228,7 @@ var V = { name: 'home', g: 0, hi: 0, rev: false };
 var M = [];
 var lastExport = 0;
 var storeOk = true, persisted = null, offlineReady = false, installEvt = null;
-var sheet = null, guard = false, filePurpose = '';
+var sheet = null, guard = false, filePurpose = '', updateReady = false;
 
 /* ---------- Helpers ---------- */
 function esc(s) {
@@ -364,10 +364,36 @@ function loadMarks() {
     var all = a[0] || {};
     M = G.map(function (g) { var m = all['m|' + survey + '|' + g.doc]; return (m && typeof m === 'object' && !Array.isArray(m)) ? m : {}; });
     lastExport = (a[1] && typeof a[1].t === 'number') ? a[1].t : 0;
+    jReplay();
   });
 }
-function saveGroup(g) {
-  return KV.set(mkey(g), M[g.i]).then(function () { storeOk = true; }, function () {
+/* A tap is first written to a small journal, which saves at once, and then to the main store, which takes a moment.
+   If the app is closed in between, the journal is replayed the next time it opens. */
+function jRead() { var j = parse(lsGet('sfs:j'), []); return Array.isArray(j) ? j : []; }
+function jWrite(j) { if (j.length) { lsSet('sfs:j', JSON.stringify(j)); } else { try { window.localStorage.removeItem('sfs:j'); } catch (e) {} } }
+function jReplay() {
+  var touched = {};
+  jRead().forEach(function (e) {
+    if (!Array.isArray(e) || e[0] !== cfg.survey || !Array.isArray(e[3])) { return; }
+    var g = GBYDOC[e[1]];
+    if (!g) { return; }
+    var cur = M[g.i][e[2]];
+    if (!cur || cur[5] < e[3][5]) { M[g.i][e[2]] = e[3]; }
+    touched[g.i] = g;
+  });
+  Object.keys(touched).forEach(function (i) { saveGroup(touched[i]); });
+}
+function saveGroup(g, palmas) {
+  var survey = cfg.survey, doc = g.doc, stamp = Date.now();
+  if (palmas && palmas.length) {
+    var j = jRead();
+    palmas.forEach(function (p) { j.push([survey, doc, p, M[g.i][p]]); });
+    jWrite(j);
+  }
+  return KV.set('m|' + survey + '|' + doc, M[g.i]).then(function () {
+    storeOk = true;
+    jWrite(jRead().filter(function (e) { return !(Array.isArray(e) && e[0] === survey && e[1] === doc && Array.isArray(e[3]) && e[3][5] <= stamp); }));
+  }, function () {
     storeOk = false; toast('No se pudo guardar en el teléfono. No cierre la app y exporte el Excel.'); renderStatus();
   });
 }
@@ -604,7 +630,8 @@ function renderSheet() {
       '<div class="kv"><div><span>Palmas revisadas</span><b>' + fmt(done) + ' de ' + fmt(TOTAL) + '</b></div>' +
       '<div><span>Sin exportar</span><b>' + fmt(countPending()) + '</b></div></div>' +
       '<label class="chk" for="exp-only"><input type="checkbox" id="exp-only"' + (s.only ? ' checked' : '') + '>Solo las palmas revisadas</label>' +
-      '<div class="note" id="exp-msg"' + (s.err ? ' style="color:var(--bad);font-weight:600"' : '') + '>' + esc(s.msg || (s.file ? 'Archivo listo: ' + s.file.name : 'Preparando el archivo…')) + '</div>';
+      (s.canShare ? '<div class="note">Compartir envía un archivo para importarlo en otro teléfono. Descargar guarda el Excel.</div>' : '') +
+      '<div class="note" id="exp-msg"' + (s.err ? ' style="color:var(--bad);font-weight:600"' : '') + '>' + esc(s.msg || (s.file ? 'Archivo listo.' : 'Preparando el archivo…')) + '</div>';
     var dis = s.file ? '' : ' disabled';
     f = '<div class="btns">' + (s.canShare ? '<button type="button" class="btn" data-act="exp-share"' + dis + '>Compartir</button>' : '') +
       '<button type="button" class="btn' + (s.canShare ? ' sec2' : '') + '" data-act="exp-save"' + dis + '>Descargar</button></div>';
@@ -613,8 +640,9 @@ function renderSheet() {
       '<div class="kv"><div><span>Base cargada</span><b style="font-family:inherit;font-size:16px">' + esc(PREV) + ' · ' + fmt(TOTAL) + ' palmas</b></div>' +
       '<div><span>Abre sin internet</span>' + yn(offlineReady, 'Sí', 'Todavía no') + '</div>' +
       '<div><span>Datos protegidos en el teléfono</span>' + yn(persisted === true, 'Sí', 'No confirmado') + '</div></div>' +
-      '<button type="button" class="btn sec2" data-act="pick-import">Importar Excel de otro teléfono</button>' +
+      '<button type="button" class="btn sec2" data-act="pick-import">Importar archivo de otro teléfono</button>' +
       '<button type="button" class="btn sec2" data-act="pick-base">Cargar otra base</button>' +
+      (updateReady ? '<button type="button" class="btn" data-act="reload">Actualizar la app</button>' : '') +
       (installEvt ? '<button type="button" class="btn" data-act="install">Instalar en este teléfono</button>'
         : '<div class="note">Para instalarla, abra el menú de Chrome (los tres puntos) y toque "Agregar a pantalla principal" o "Instalar app".</div>');
   } else if (s.type === 'busy') {
@@ -661,8 +689,9 @@ function openPalm(ri) {
 function readNote() { var el = document.getElementById('palm-note'); if (el && sheet) { sheet.note = el.value.trim(); } }
 function savePalm(code, extras) {
   var s = sheet, g = G[s.g];
-  M[g.i][g.rows[s.ri][1]] = makeRec(code, extras, s.note);
-  saveGroup(g); askPersist(); closeSheet(); render();
+  var palma = g.rows[s.ri][1];
+  M[g.i][palma] = makeRec(code, extras, s.note);
+  saveGroup(g, [palma]); askPersist(); closeSheet(); render();
 }
 function setEval(name) {
   var then = sheet && sheet.then;
@@ -705,6 +734,34 @@ function exportRows(only) {
     });
   });
   return out;
+}
+/* Chrome on Android only lets a web app share a few file types, and Excel is not one of them: sharing sends a .csv that the app imports. */
+function csvFile(rows, name) {
+  var text = '\ufeff' + rows.map(function (r, i) {
+    return r.map(function (v, c) {
+      if (v == null) { return ''; }
+      v = (i > 0 && c === 0) ? dmy(v) : String(v);
+      return /[";\n\r]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v;
+    }).join(';');
+  }).join('\r\n');
+  return new File([text], name, { type: 'text/csv' });
+}
+function parseCsv(text) {
+  if (text.charCodeAt(0) === 0xFEFF) { text = text.slice(1); }
+  var first = text.split(/\r?\n/, 1)[0] || '';
+  var d = [';', ',', '\t'].sort(function (a, b) { return first.split(b).length - first.split(a).length; })[0];
+  var rows = [], row = [], cur = '', q = false, i, ch;
+  for (i = 0; i < text.length; i++) {
+    ch = text.charAt(i);
+    if (q) {
+      if (ch === '"') { if (text.charAt(i + 1) === '"') { cur += '"'; i++; } else { q = false; } } else { cur += ch; }
+    } else if (ch === '"') { q = true; }
+    else if (ch === d) { row.push(cur); cur = ''; }
+    else if (ch === '\n') { row.push(cur); rows.push(row); row = []; cur = ''; }
+    else if (ch !== '\r') { cur += ch; }
+  }
+  if (cur !== '' || row.length) { row.push(cur); rows.push(row); }
+  return rows.map(function (r) { return r.map(function (v) { return v === '' ? null : v; }); });
 }
 var CRC_T = (function () {
   var t = [], n, k, c;
@@ -802,21 +859,24 @@ function xlsxBlob(rows, sheetName, widths) {
 function prepareExport() {
   var s = sheet;
   if (!s || s.type !== 'export') { return; }
-  s.file = null; s.msg = ''; s.err = false; s.token = (s.token || 0) + 1;
+  s.file = null; s.share = null; s.msg = ''; s.err = false; s.token = (s.token || 0) + 1;
   var token = s.token, label = surveyLabel(cfg.survey);
   var who = cfg.evaluador ? '_' + cfg.evaluador.replace(/[^A-Za-z0-9]+/g, '') : '';
-  var filename = 'Survey_FS_' + label.replace(' ', '_') + who + '.xlsx';
+  var stem = 'Survey_FS_' + label.replace(' ', '_') + who, filename = stem + '.xlsx';
   renderSheet();
   setTimeout(function () {
-    var job;
-    try { job = xlsxBlob(exportRows(s.only), 'Survey FS ' + label.split(' ')[0], [12, 12, 7, 10, 13, 8, 8, 10, 44, 12, 4, 4, 28, 22, 24]); }
+    var job, rows;
+    try { rows = exportRows(s.only); job = xlsxBlob(rows, 'Survey FS ' + label.split(' ')[0], [12, 12, 7, 10, 13, 8, 8, 10, 44, 12, 4, 4, 28, 22, 24]); }
     catch (e) { job = Promise.reject(e); }
     job.then(function (blob) {
       if (sheet !== s || s.token !== token) { return; }
       var file;
       try { file = new File([blob], filename, { type: XLSX_MIME }); } catch (e) { file = blob; file.name = filename; }
       s.file = file;
-      try { s.canShare = !!(navigator.canShare && navigator.share && file instanceof File && navigator.canShare({ files: [file] })); } catch (e) { s.canShare = false; }
+      try {
+        s.share = csvFile(rows, stem + '.csv');
+        s.canShare = !!(navigator.canShare && navigator.share && navigator.canShare({ files: [s.share] }));
+      } catch (e) { s.share = null; s.canShare = false; }
       renderSheet();
     }, function () {
       if (sheet !== s || s.token !== token) { return; }
@@ -824,10 +884,10 @@ function prepareExport() {
     });
   }, 30);
 }
-function markExported(s) {
+function markExported(s, name) {
   lastExport = Date.now();
   KV.set('x|' + cfg.survey, { t: lastExport }).catch(function () {});
-  s.msg = 'Listo: ' + s.file.name; s.err = false;
+  s.msg = 'Listo: ' + (name || s.file.name); s.err = false;
   if (sheet === s) { renderSheet(); }
   render();
 }
@@ -984,13 +1044,18 @@ function fail(msg) { openSheet({ type: 'msg', title: 'No se pudo leer', msg: msg
 function handleFile(file) {
   var purpose = (!base || filePurpose === 'base') ? 'base' : 'import';
   openSheet({ type: 'busy', title: 'Leyendo el archivo', msg: file.name });
-  file.arrayBuffer().then(openXlsx).then(function (wb) {
+  file.arrayBuffer().then(function (buf) {
+    var u = new Uint8Array(buf, 0, Math.min(2, buf.byteLength));
+    if (u[0] === 0x50 && u[1] === 0x4B) { return openXlsx(buf); }
+    var aoa = parseCsv(new TextDecoder().decode(buf));
+    return { sheets: [{ name: file.name }], rows: function () { return Promise.resolve(aoa); } };
+  }).then(function (wb) {
     if (!wb.sheets.length) { throw new Error('empty'); }
     var use = function (i) {
       openSheet({ type: 'busy', title: 'Leyendo el archivo', msg: wb.sheets[i].name });
       return wb.rows(i).then(function (aoa) {
         var tab = tableOf(aoa);
-        if (!tab || !tab.recs.length) { fail('La hoja "' + wb.sheets[i].name + '" no trae las columnas LOTE, CENTRO, EXPERIMENTO, PALMA y COD. ENF.'); return; }
+        if (!tab || !tab.recs.length) { fail('"' + wb.sheets[i].name + '" no trae las columnas LOTE, CENTRO, EXPERIMENTO, PALMA y COD. ENF.'); return; }
         if (purpose === 'base') { openSheet({ type: 'base-ok', base: buildBase(tab, file.name), file: file.name }); }
         else { openSheet({ type: 'import-ok', plan: planImport(tab), file: file.name }); }
       });
@@ -998,7 +1063,7 @@ function handleFile(file) {
     if (wb.sheets.length === 1) { return use(0); }
     openSheet({ type: 'pick-sheet', names: wb.sheets.map(function (s) { return s.name; }), use: use });
   }).catch(function (e) {
-    fail(e && e.message === 'inflate' ? 'Este navegador no puede abrir el archivo. Actualice Chrome e intente de nuevo.' : 'El archivo no es un Excel (.xlsx) válido.');
+    fail(e && e.message === 'inflate' ? 'Este navegador no puede abrir el archivo. Actualice Chrome e intente de nuevo.' : 'No se pudo leer el archivo. Debe ser el Excel (.xlsx) o el archivo compartido (.csv) de la app.');
   });
 }
 
@@ -1029,21 +1094,21 @@ document.addEventListener('click', function (ev) {
     case 'cat-pick': var cc = t.getAttribute('data-c'); if (s.sel.indexOf(cc) === -1) { s.sel.push(cc); } s.cat = false; renderSheet(); break;
     case 'san': readNote(); savePalm('SAN', ''); break;
     case 'save': readNote(); if (s.sel.length) { var p = principal(s.sel); savePalm(p, s.sel.filter(function (x) { return x !== p; }).join(', ')); } break;
-    case 'clear': g = G[s.g]; M[g.i][g.rows[s.ri][1]] = ['', '', '', '', cfg.evaluador, Date.now()]; saveGroup(g); closeSheet(); render(); break;
+    case 'clear': g = G[s.g]; M[g.i][g.rows[s.ri][1]] = ['', '', '', '', cfg.evaluador, Date.now()]; saveGroup(g, [g.rows[s.ri][1]]); closeSheet(); render(); break;
     case 'bulk': startBulk(); break;
     case 'bulk-ok': g = G[s.g];
       s.san.forEach(function (pl) { M[g.i][pl] = makeRec('SAN', '', ''); });
       s.fal.forEach(function (pl) { M[g.i][pl] = makeRec('FAL', '', ''); });
-      saveGroup(g); askPersist(); closeSheet(); render(); break;
+      saveGroup(g, s.san.concat(s.fal)); askPersist(); closeSheet(); render(); break;
     case 'eval': openSheet({ type: 'eval' }); break;
     case 'eval-pick': setEval(t.getAttribute('data-n')); break;
     case 'eval-other': var v = document.getElementById('eval-other').value.replace(/\s+/g, ' ').trim(); if (v) { setEval(v); } else { toast('Escriba el nombre.'); } break;
     case 'export': openSheet({ type: 'export', only: false, file: null, canShare: false }); prepareExport(); break;
     case 'exp-share':
-      if (s.file) {
-        navigator.share({ files: [s.file], title: s.file.name }).then(function () { markExported(s); }, function (e) {
+      if (s.share) {
+        navigator.share({ files: [s.share], title: s.share.name }).then(function () { markExported(s, s.share.name); }, function (e) {
           if (e && e.name === 'AbortError') { return; }
-          s.msg = 'No se pudo compartir. Use Descargar.'; s.err = true; if (sheet === s) { renderSheet(); }
+          s.msg = 'No se pudo compartir. Use Descargar y envíe el archivo desde WhatsApp.'; s.err = true; if (sheet === s) { renderSheet(); }
         });
       }
       break;
@@ -1077,6 +1142,7 @@ document.addEventListener('click', function (ev) {
         closeSheet(); render(); toast('Se importaron ' + fmt(plan.add.length + plan.upd.length) + ' palmas');
       });
       break;
+    case 'reload': window.location.reload(); break;
     case 'install':
       if (installEvt) { installEvt.prompt(); installEvt = null; closeSheet(); }
       break;
@@ -1123,7 +1189,14 @@ try {
   if (navigator.storage && navigator.storage.persisted) { navigator.storage.persisted().then(function (ok) { persisted = !!ok; }, function () {}); }
 } catch (e) {}
 if ('serviceWorker' in navigator && /^https?:$/.test(window.location.protocol)) {
+  var hadController = !!navigator.serviceWorker.controller;
   navigator.serviceWorker.register('sw.js').catch(function () {});
+  navigator.serviceWorker.addEventListener('controllerchange', function () {
+    if (!hadController) { return; }
+    updateReady = true;
+    toast('Hay una versión nueva. Cierre la app y ábrala de nuevo.');
+    if (sheet && sheet.type === 'opts') { renderSheet(); }
+  });
   navigator.serviceWorker.ready.then(function () {
     offlineReady = true;
     if (!base) { renderNoBase(); } else if (sheet && sheet.type === 'opts') { renderSheet(); }
