@@ -120,6 +120,7 @@ select.ctl { appearance: auto; }
 }
 .pill.ok { background: var(--brand-soft); color: var(--brand-text); border-color: var(--brand-soft); }
 .pill.hit { background: var(--warn-bg); color: var(--warn-ink); border-color: var(--warn-line); }
+.pill.fal { background: var(--bg); color: var(--muted); border-color: var(--line-strong); border-style: dashed; }
 .tool { padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .tool .info { font-size: 15px; color: var(--muted); font-variant-numeric: tabular-nums; }
 .link { min-height: 44px; padding: 0 4px; color: var(--brand-text); font-size: 15px; font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
@@ -209,7 +210,7 @@ svg.i { fill: none; stroke: currentColor; stroke-width: 2.5; stroke-linecap: rou
 (function () {
 'use strict';
 
-var APP_VERSION = '1.2';
+var APP_VERSION = '1.3';
 var CAT = [["SAN","SANA"],["EDO","Enfermedad descomocida en observación (EDO)"],["ARJ","Anillo rojo/hoja pequeña (ARJ)"],["PES","Manchas foliares por Pestalotiopsis sp y otros hongos asociados (PES)"],["MYE","Mycosphaerella elaeidis (MYE)"],["MAR","Marchitez sorpresiva (MAR)"],["ACL","Anillo clorótico (ACL)"],["MLT","Marchitez letal (MLT)"],["MAF","Marchitez por Fusarium (MAF)"],["PFC","Pudrición de flecha/arqueo foliar comun (PFC)"],["PSC","Pudrición severa del cogollo (PSC)"],["FSR","Flecha Seca en recupéración (FSR)"],["FSR1","Flecha Seca en recuperación (FSR1)"],["FSR2","Flecha Seca en recuperación (FSR2)"],["FSR3","Flecha Seca en recuperación (FSR3)"],["FSF","Flecha Seca Recuperada con fruta (FSF)"],["FSA","Flecha Seca con solo hojas amarillas (FSA)"],["FST","Fleca Seca en recuperación con el cogollo torcido (FST)"],["PMT","Pudrición media del tallo (PMT)"],["MAN","Mancha anular (MAN)"],["PSR","Pudrición comun de flecha en recuperación (PSR)"],["PBH","Pudrición basal humeda (PBH)"],["PBS","Pudricion basal seca (PBS)"],["PBC","Pudrición basal corchosa (PBC)"],["PBG","Pudrición basal por Ganoderma (PBG)"],["PAT","Pudrición alta del tallo (PAT)"],["FS1","Flecha Seca clásica (FS1)"],["FS2","Flecha Seca clásica (FS2)"],["FS3","Flecha Seca clásica (FS3)"],["FS4","Flecha Seca clásica (FS4)"],["RAY","Daños por rayos (RAY)"],["FUE","Daño por fuego (FUE)"],["FCV","Fractura (doblamiento) de la corona por viento (FCV)"],["HER","Daño por herbicidas (HER)"],["PEV","Palma inyectada (envenenada) con herbicida (PEV)"],["FER","Quema o daño por fertilizante (FER)"],["DCR","Doblamiento de la corona en recuperación (DCR)"],["PRQ","Palma raquítica (PRQ)"],["FAL","Falla (FAL)"],["ANG","Anormalidad genética (ANG)"],["PIS","Palmas pisíferas e improductivas (PIS)"],["DRE","Mal drenaje (DRE)"],["DEH","Déficit hídrico (DEH)"],["PVI","Palma virada y/o desraizada (PVI)"],["POV","Palma voluntaria (POV)"],["DCE","Daño por corriente eléctrico (DCE)"],["PMS","Palma mal sembrada (PMS)"],["PMA","Palma muy alta (PMA)"],["PAR","Pudrición apical del racimo (PAR)"],["FAR","Falla de racimos (FAR)"],["RAN","Racimos o inflorescencias anormales (RAN)"],["DEN","Deficiencia de nitrogeno (DEN)"],["DEP","Deficiencia de fosforo (DEP)"],["DEB","Deficiencia de boro (DEB)"],["DEK","Manchas anaranjadas (hojas viejas) o amarillamiento medio de la corona por deficiencia de potasio (DEK)"],["DMG","Deficiencia de magnesio (DMG)"],["RYB","Raya blanca (RYB)"],["DK1","Deficiencia de potasio (DK1)"],["DK2","Deficiencia de potasio (DK2)"],["DK3","Deficiencia de potasio (DK3)"],["DK4","Deficiencia de potasio (DK4)"],["PNI","Plaga defoliadora no identificada y en observación (PNI)"],["HOR","Hormigas arrieras o cortadoras (zompopas) (HOR)"],["OPC","Opsiphanes cassina (OPC)"],["SIM","Acharia hyperoche (Sibine megasonoides) (SIM)"],["SIF","Sibine fusca (SIF)"],["OIK","Oiketicus kirby (OIK)"],["STC","Stenoma cecropia (STC)"],["AUT","Automeris sp. (AUT)"],["REE","Ácaros: Retracrus elaeidis (REE)"],["CCH","Chinches chupadores (CCH)"],["CHA","Saltamontes o chapulines (CHA)"],["CIG","Chupadores homópteros (cigarras) (CIG)"],["CCN","Cochinillas (CCN)"],["RHP","Rhynchophorus palmarum (RHP)"],["STA","Strategus aloeus (STA)"],["RHB","Rhinosthomus barbirostrib (RHB)"],["CYD","Cyparissius (Castnia) daedaus (CYD)"],["SAV","Sagalassa valida (SAV)"],["DUA","Durrantia sp. (DUA)"],["RAT","Ratas (RAT)"],["GAN","Daño por ganado (GAN)"],["CER","Daño por cerdos (CER)"],["ORT","Taltuzas (ORT)"],["CAP","Otros Roedores (capibaras) (CAP)"],["PER","Aves treapadoras (periquitos) (PER)"],["ZOP","Daño por zopilotes (ZOP)"],["DAR","Daño por ardilas (DAR)"],["ADA","Arbol dentro de area"],["DCV","Doblamiento de la corona por viento"],["ARF","Arqueo foliar"],["HORR","Hormigas recuperando"]];
 
 /* ---------- Catalogs ---------- */
@@ -254,11 +255,19 @@ function surveyOptions() {
 function lsGet(k) { try { return window.localStorage.getItem(k); } catch (e) { return null; } }
 function lsSet(k, v) { try { window.localStorage.setItem(k, v); return true; } catch (e) { return false; } }
 function parse(s, fb) { if (!s) { return fb; } try { var v = JSON.parse(s); return v == null ? fb : v; } catch (e) { return fb; } }
-function isDone(g, palma) { var r = M[g.i][palma]; return !!(r && r[0]); }
+/* A palm that was a falla in the reference survey stays FAL on its own; tapping it and marking something else replaces that. */
+var AUTO_FAL = ['FAL', '', '', '', '', 0, true];
+function markOf(g, palma) {
+  var r = M[g.i][palma];
+  if (r) { return r[0] ? r : null; }
+  var ri = g.byPalma[palma];
+  return (ri != null && g.rows[ri][2] === 'FAL') ? AUTO_FAL : null;
+}
+function isDone(g, palma) { return !!markOf(g, palma); }
 function countDone(g, idx) {
-  var m = M[g.i], n = 0, k;
-  if (idx) { for (k = 0; k < idx.length; k++) { var r = m[g.rows[idx[k]][1]]; if (r && r[0]) { n++; } } return n; }
-  for (k in m) { if (m[k] && m[k][0] && g.byPalma[k] != null) { n++; } }
+  var n = 0, k;
+  if (idx) { for (k = 0; k < idx.length; k++) { if (markOf(g, g.rows[idx[k]][1])) { n++; } } return n; }
+  for (k = 0; k < g.rows.length; k++) { if (markOf(g, g.rows[k][1])) { n++; } }
   return n;
 }
 function countPending() {
@@ -520,10 +529,10 @@ function renderCentro() {
   var html = '<div class="tool"><div class="info">' + (gr.h == null ? 'Todas las hileras' : 'Hilera ' + gr.h) + ' · ' + doneH + ' de ' + gr.idx.length + '</div>' +
     '<button type="button" class="link" data-act="rev">Invertir orden</button></div><div class="list">';
   idx.forEach(function (ri) {
-    var r = g.rows[ri], rec = M[g.i][r[1]], prev = r[2];
-    var pill = (rec && rec[0])
-      ? '<span class="pill ' + (rec[0] === 'SAN' ? 'ok' : 'hit') + '">' + esc(markLabel(rec)) + '</span>'
-      : '<span class="pill">Pendiente</span>';
+    var r = g.rows[ri], rec = markOf(g, r[1]), prev = r[2];
+    var pill = !rec ? '<span class="pill">Pendiente</span>'
+      : rec[6] ? '<span class="pill fal">FAL</span>'
+      : '<span class="pill ' + (rec[0] === 'SAN' ? 'ok' : 'hit') + '">' + esc(markLabel(rec)) + '</span>';
     html += '<button type="button" class="row" data-act="palm" data-ri="' + ri + '"><span class="num">' + esc(r[1]) + '</span>' +
       '<span class="grow"><span class="lbl">' + (gr.h == null ? 'H' + esc(r[0]) + ' · ' : '') + esc(PREV) + '</span>' +
       '<span class="pv' + (!prev ? ' none' : prev !== 'SAN' ? ' hot' : '') + '">' + esc(prev || 'Sin dato') + '</span></span>' + pill + '</button>';
@@ -679,8 +688,8 @@ function renderSheet() {
 }
 function openPalm(ri) {
   if (!cfg.evaluador) { openSheet({ type: 'eval', then: ri }); return; }
-  var g = G[V.g], rec = M[g.i][g.rows[ri][1]], sel = [], note = '';
-  if (rec && rec[0]) {
+  var g = G[V.g], rec = markOf(g, g.rows[ri][1]), sel = [], note = '';
+  if (rec) {
     note = rec[2] || '';
     if (rec[0] !== 'SAN') { sel = [rec[0]].concat(rec[1] ? rec[1].split(', ') : []); }
   }
@@ -722,8 +731,15 @@ function obsNum(code, prevObs) {
 function exportRows(only) {
   var out = [['FECHA DE SURVEY', 'MES', 'LOTE', 'CENTRO', 'EXPERIMENTO', 'HILERA', 'PALMA', 'COD. ENF', 'DESCRIPCIÓN', 'OBSERVACIÓN NUMERICA', 'E', 'T', 'OBSERVACIÓN', 'REALIZADO POR', base.extraHead || 'ESTADO MAYO 2026']];
   G.forEach(function (g) {
+    /* Fallas carried over take the date and evaluator of the latest palm marked in the same centro. */
+    var last = null, k;
+    for (k in M[g.i]) { var e = M[g.i][k]; if (e && e[0] && g.byPalma[k] != null && (!last || e[3] > last[3] || (e[3] === last[3] && e[5] > last[5]))) { last = e; } }
     g.rows.forEach(function (r) {
-      var rec = M[g.i][r[1]], ok = !!(rec && rec[0]);
+      var rec = markOf(g, r[1]), ok = !!rec;
+      if (rec && rec[6]) {
+        if (!last && only) { return; }
+        rec = ['FAL', '', '', last ? last[3] : '', last ? last[4] : '', 0];
+      }
       if (only && !ok) { return; }
       var extra = r[4] || null;
       if (!ok) { out.push([null, null, g.lote, g.centro, g.exp, r[0], r[1], null, null, null, null, null, null, null, extra]); return; }
