@@ -219,7 +219,7 @@ svg.i { fill: none; stroke: currentColor; stroke-width: 2.5; stroke-linecap: rou
 (function () {
 'use strict';
 
-var APP_VERSION = '2.0';
+var APP_VERSION = '2.1';
 var CAT = [["SAN","SANA"],["EDO","Enfermedad descomocida en observación (EDO)"],["ARJ","Anillo rojo/hoja pequeña (ARJ)"],["PES","Manchas foliares por Pestalotiopsis sp y otros hongos asociados (PES)"],["MYE","Mycosphaerella elaeidis (MYE)"],["MAR","Marchitez sorpresiva (MAR)"],["ACL","Anillo clorótico (ACL)"],["MLT","Marchitez letal (MLT)"],["MAF","Marchitez por Fusarium (MAF)"],["PFC","Pudrición de flecha/arqueo foliar comun (PFC)"],["PSC","Pudrición severa del cogollo (PSC)"],["FSR","Flecha Seca en recupéración (FSR)"],["FSR1","Flecha Seca en recuperación (FSR1)"],["FSR2","Flecha Seca en recuperación (FSR2)"],["FSR3","Flecha Seca en recuperación (FSR3)"],["FSF","Flecha Seca Recuperada con fruta (FSF)"],["FSA","Flecha Seca con solo hojas amarillas (FSA)"],["FST","Fleca Seca en recuperación con el cogollo torcido (FST)"],["PMT","Pudrición media del tallo (PMT)"],["MAN","Mancha anular (MAN)"],["PSR","Pudrición comun de flecha en recuperación (PSR)"],["PBH","Pudrición basal humeda (PBH)"],["PBS","Pudricion basal seca (PBS)"],["PBC","Pudrición basal corchosa (PBC)"],["PBG","Pudrición basal por Ganoderma (PBG)"],["PAT","Pudrición alta del tallo (PAT)"],["FS1","Flecha Seca clásica (FS1)"],["FS2","Flecha Seca clásica (FS2)"],["FS3","Flecha Seca clásica (FS3)"],["FS4","Flecha Seca clásica (FS4)"],["RAY","Daños por rayos (RAY)"],["FUE","Daño por fuego (FUE)"],["FCV","Fractura (doblamiento) de la corona por viento (FCV)"],["HER","Daño por herbicidas (HER)"],["PEV","Palma inyectada (envenenada) con herbicida (PEV)"],["FER","Quema o daño por fertilizante (FER)"],["DCR","Doblamiento de la corona en recuperación (DCR)"],["PRQ","Palma raquítica (PRQ)"],["FAL","Falla (FAL)"],["ANG","Anormalidad genética (ANG)"],["PIS","Palmas pisíferas e improductivas (PIS)"],["DRE","Mal drenaje (DRE)"],["DEH","Déficit hídrico (DEH)"],["PVI","Palma virada y/o desraizada (PVI)"],["POV","Palma voluntaria (POV)"],["DCE","Daño por corriente eléctrico (DCE)"],["PMS","Palma mal sembrada (PMS)"],["PMA","Palma muy alta (PMA)"],["PAR","Pudrición apical del racimo (PAR)"],["FAR","Falla de racimos (FAR)"],["RAN","Racimos o inflorescencias anormales (RAN)"],["DEN","Deficiencia de nitrogeno (DEN)"],["DEP","Deficiencia de fosforo (DEP)"],["DEB","Deficiencia de boro (DEB)"],["DEK","Manchas anaranjadas (hojas viejas) o amarillamiento medio de la corona por deficiencia de potasio (DEK)"],["DMG","Deficiencia de magnesio (DMG)"],["RYB","Raya blanca (RYB)"],["DK1","Deficiencia de potasio (DK1)"],["DK2","Deficiencia de potasio (DK2)"],["DK3","Deficiencia de potasio (DK3)"],["DK4","Deficiencia de potasio (DK4)"],["PNI","Plaga defoliadora no identificada y en observación (PNI)"],["HOR","Hormigas arrieras o cortadoras (zompopas) (HOR)"],["OPC","Opsiphanes cassina (OPC)"],["SIM","Acharia hyperoche (Sibine megasonoides) (SIM)"],["SIF","Sibine fusca (SIF)"],["OIK","Oiketicus kirby (OIK)"],["STC","Stenoma cecropia (STC)"],["AUT","Automeris sp. (AUT)"],["REE","Ácaros: Retracrus elaeidis (REE)"],["CCH","Chinches chupadores (CCH)"],["CHA","Saltamontes o chapulines (CHA)"],["CIG","Chupadores homópteros (cigarras) (CIG)"],["CCN","Cochinillas (CCN)"],["RHP","Rhynchophorus palmarum (RHP)"],["STA","Strategus aloeus (STA)"],["RHB","Rhinosthomus barbirostrib (RHB)"],["CYD","Cyparissius (Castnia) daedaus (CYD)"],["SAV","Sagalassa valida (SAV)"],["DUA","Durrantia sp. (DUA)"],["RAT","Ratas (RAT)"],["GAN","Daño por ganado (GAN)"],["CER","Daño por cerdos (CER)"],["ORT","Taltuzas (ORT)"],["CAP","Otros Roedores (capibaras) (CAP)"],["PER","Aves treapadoras (periquitos) (PER)"],["ZOP","Daño por zopilotes (ZOP)"],["DAR","Daño por ardilas (DAR)"],["ADA","Arbol dentro de area"],["DCV","Doblamiento de la corona por viento"],["ARF","Arqueo foliar"],["HORR","Hormigas recuperando"]];
 
 /* ---------- Catalogs ---------- */
@@ -453,14 +453,15 @@ function setBase(b) {
     var hs = Object.keys(byH).map(Number).sort(function (a, c) { return a - c; });
     var asc = function (a, c) { return rows[a][1] - rows[c][1]; };
     var groups;
-    if (hs.length > 20) {
+    var noH = hs.length === 1 && !hs[0];   /* a base without row numbers: one list per centro */
+    if (hs.length > 20 || noH) {
       groups = [{ h: null, label: 'Todas', idx: rows.map(function (_, k) { return k; }).sort(asc) }];
     } else {
       groups = hs.map(function (h) { return { h: h, label: 'H' + h, idx: byH[h].sort(asc) }; });
     }
     var cen = String(x.centro);
     var g = {
-      i: i, lote: x.lote, centro: x.centro, exp: x.exp, rows: rows, groups: groups, byPalma: byPalma, nh: hs.length,
+      i: i, lote: x.lote, centro: x.centro, exp: x.exp, rows: rows, groups: groups, byPalma: byPalma, nh: noH ? 0 : hs.length,
       doc: docId(x.lote, x.centro, x.exp),
       sort: [parseInt((cen.match(/\d+/) || ['0'])[0], 10), /^\d/.test(cen) ? 0 : 1, cen]
     };
@@ -525,7 +526,7 @@ function renderHome() {
       var d = countDone(g), t = g.rows.length;
       var pill = d === 0 ? '<span class="pill">Pendiente</span>' : d >= t ? '<span class="pill ok">Completo</span>' : '<span class="pill hit">' + d + ' de ' + t + '</span>';
       html += '<button type="button" class="row" data-act="open" data-g="' + g.i + '"><span class="grow"><span class="t">Centro ' + esc(g.centro) + '</span>' +
-        '<span class="d">' + esc(g.exp) + ' · ' + t + ' palmas · ' + g.nh + ' hileras</span></span>' + pill + icon(I_NEXT, 20) + '</button>';
+        '<span class="d">' + esc(g.exp) + ' · ' + t + ' palmas' + (g.nh ? ' · ' + g.nh + ' hileras' : '') + '</span></span>' + pill + icon(I_NEXT, 20) + '</button>';
     });
     html += '</div>';
   });
@@ -557,7 +558,7 @@ function renderCentro() {
     '<div class="sub">' + (bases.length > 1 ? esc(baseName()) + ' · ' : '') + esc(g.exp) + ' · ' + esc(surveyLabel(cfg.survey)) + (cfg.evaluador ? ' · ' + esc(cfg.evaluador) : '') + '</div></div></div>' +
     progHtml(countDone(g), g.rows.length, 'revisadas') + chips;
   var doneH = countDone(g, gr.idx);
-  var html = '<div class="tool"><div class="info">' + (gr.h == null ? 'Todas las hileras' : 'Hilera ' + gr.h) + ' · ' + doneH + ' de ' + gr.idx.length + '</div>' +
+  var html = '<div class="tool"><div class="info">' + (gr.h == null ? (g.nh ? 'Todas las hileras' : 'Todo el centro') : 'Hilera ' + gr.h) + ' · ' + doneH + ' de ' + gr.idx.length + '</div>' +
     '<button type="button" class="link" data-act="rev">Invertir orden</button></div><div class="list">';
   idx.forEach(function (ri) {
     var r = g.rows[ri], rec = markOf(g, r[1]), prev = r[2], rip = isRip(r);
@@ -566,7 +567,7 @@ function renderCentro() {
       : rec[6] ? '<span class="pill fal">FAL</span>'
       : '<span class="pill ' + (rec[0] === 'SAN' ? 'ok' : 'hit') + '">' + esc(markLabel(rec)) + '</span>';
     html += '<button type="button" class="row" data-act="palm" data-ri="' + ri + '"><span class="num">' + esc(r[1]) + '</span>' +
-      '<span class="grow"><span class="lbl">' + (gr.h == null ? 'H' + esc(r[0]) + ' · ' : '') + esc(PREV) + '</span>' +
+      '<span class="grow"><span class="lbl">' + (gr.h == null && r[0] ? 'H' + esc(r[0]) + ' · ' : '') + esc(PREV) + '</span>' +
       '<span class="pv' + (!prev ? ' none' : prev !== 'SAN' ? ' hot' : '') + '">' + esc(prev || 'Sin dato') + (rip ? ' <span class="rip">· ribereña</span>' : '') + '</span></span>' + pill + '</button>';
   });
   html += '</div><div class="sec"></div>';
@@ -628,7 +629,7 @@ function renderSheet() {
   var s = sheet, h = '', f = '';
   if (s.type === 'palm') {
     var g = G[s.g], r = g.rows[s.ri], prev = r[2];
-    h = shTop('Palma ' + esc(r[1]), 'Hilera ' + esc(r[0]) + ' · ' + esc(PREV) + ': ' + esc(prev || 'sin dato') + (prev && prev !== 'SAN' && DESC[prev] ? ' · ' + esc(DESC[prev]) : '') + (isRip(r) ? ' · Zona ribereña' : ''));
+    h = shTop('Palma ' + esc(r[1]), (r[0] ? 'Hilera ' + esc(r[0]) + ' · ' : '') + esc(PREV) + ': ' + esc(prev || 'sin dato') + (prev && prev !== 'SAN' && DESC[prev] ? ' · ' + esc(DESC[prev]) : '') + (isRip(r) ? ' · Zona ribereña' : ''));
     if (s.cat) {
       h += '<div class="field"><label for="cat-q">Buscar código o enfermedad</label><input class="inp" id="cat-q" type="search" autocomplete="off" value="' + esc(s.q || '') + '"></div>' +
         '<div class="cat" id="cat-list">' + catItems(catFilter(s.q)) + '</div>';
@@ -810,10 +811,10 @@ function exportRows(only) {
       }
       if (only && !ok) { return; }
       var extra = r[4] || null;
-      if (!ok) { out.push([null, null, g.lote, g.centro, g.exp, r[0], r[1], null, null, null, null, null, null, null, extra]); return; }
+      if (!ok) { out.push([null, null, g.lote, g.centro, g.exp, r[0] || null, r[1], null, null, null, null, null, null, null, extra]); return; }
       var obs = [rec[1], rec[2]].filter(function (x) { return x; }).join(' · ');
       var ymd = /^\d{4}-\d{2}-\d{2}$/.test(rec[3]) ? rec[3] : null;
-      out.push([ymd, ymd ? MESES[parseInt(ymd.slice(5, 7), 10) - 1] : null, g.lote, g.centro, g.exp, r[0], r[1],
+      out.push([ymd, ymd ? MESES[parseInt(ymd.slice(5, 7), 10) - 1] : null, g.lote, g.centro, g.exp, r[0] || null, r[1],
         rec[0], DESC[rec[0]] || null, obsNum(rec[0], r[3]), null, null, obs || null, rec[4] || null, extra]);
     });
   });
