@@ -78,6 +78,7 @@ button { appearance: none; border: 0; background: none; padding: 0; margin: 0; c
 .h1 { margin: 0; font-family: var(--font-num); font-size: 32px; font-weight: 700; line-height: 1; text-wrap: balance; }
 .sub { font-size: 14px; color: var(--head-sub); }
 .head-ctl { display: flex; flex-wrap: wrap; gap: 8px; }
+.ctl.wide { flex-basis: 100%; }
 .ctl {
   min-height: 44px; box-sizing: border-box; padding: 8px 12px; border-radius: 10px;
   background: var(--head-track); color: var(--head-ink); border: 1px solid transparent;
@@ -218,7 +219,7 @@ svg.i { fill: none; stroke: currentColor; stroke-width: 2.5; stroke-linecap: rou
 (function () {
 'use strict';
 
-var APP_VERSION = '1.7';
+var APP_VERSION = '2.0';
 var CAT = [["SAN","SANA"],["EDO","Enfermedad descomocida en observación (EDO)"],["ARJ","Anillo rojo/hoja pequeña (ARJ)"],["PES","Manchas foliares por Pestalotiopsis sp y otros hongos asociados (PES)"],["MYE","Mycosphaerella elaeidis (MYE)"],["MAR","Marchitez sorpresiva (MAR)"],["ACL","Anillo clorótico (ACL)"],["MLT","Marchitez letal (MLT)"],["MAF","Marchitez por Fusarium (MAF)"],["PFC","Pudrición de flecha/arqueo foliar comun (PFC)"],["PSC","Pudrición severa del cogollo (PSC)"],["FSR","Flecha Seca en recupéración (FSR)"],["FSR1","Flecha Seca en recuperación (FSR1)"],["FSR2","Flecha Seca en recuperación (FSR2)"],["FSR3","Flecha Seca en recuperación (FSR3)"],["FSF","Flecha Seca Recuperada con fruta (FSF)"],["FSA","Flecha Seca con solo hojas amarillas (FSA)"],["FST","Fleca Seca en recuperación con el cogollo torcido (FST)"],["PMT","Pudrición media del tallo (PMT)"],["MAN","Mancha anular (MAN)"],["PSR","Pudrición comun de flecha en recuperación (PSR)"],["PBH","Pudrición basal humeda (PBH)"],["PBS","Pudricion basal seca (PBS)"],["PBC","Pudrición basal corchosa (PBC)"],["PBG","Pudrición basal por Ganoderma (PBG)"],["PAT","Pudrición alta del tallo (PAT)"],["FS1","Flecha Seca clásica (FS1)"],["FS2","Flecha Seca clásica (FS2)"],["FS3","Flecha Seca clásica (FS3)"],["FS4","Flecha Seca clásica (FS4)"],["RAY","Daños por rayos (RAY)"],["FUE","Daño por fuego (FUE)"],["FCV","Fractura (doblamiento) de la corona por viento (FCV)"],["HER","Daño por herbicidas (HER)"],["PEV","Palma inyectada (envenenada) con herbicida (PEV)"],["FER","Quema o daño por fertilizante (FER)"],["DCR","Doblamiento de la corona en recuperación (DCR)"],["PRQ","Palma raquítica (PRQ)"],["FAL","Falla (FAL)"],["ANG","Anormalidad genética (ANG)"],["PIS","Palmas pisíferas e improductivas (PIS)"],["DRE","Mal drenaje (DRE)"],["DEH","Déficit hídrico (DEH)"],["PVI","Palma virada y/o desraizada (PVI)"],["POV","Palma voluntaria (POV)"],["DCE","Daño por corriente eléctrico (DCE)"],["PMS","Palma mal sembrada (PMS)"],["PMA","Palma muy alta (PMA)"],["PAR","Pudrición apical del racimo (PAR)"],["FAR","Falla de racimos (FAR)"],["RAN","Racimos o inflorescencias anormales (RAN)"],["DEN","Deficiencia de nitrogeno (DEN)"],["DEP","Deficiencia de fosforo (DEP)"],["DEB","Deficiencia de boro (DEB)"],["DEK","Manchas anaranjadas (hojas viejas) o amarillamiento medio de la corona por deficiencia de potasio (DEK)"],["DMG","Deficiencia de magnesio (DMG)"],["RYB","Raya blanca (RYB)"],["DK1","Deficiencia de potasio (DK1)"],["DK2","Deficiencia de potasio (DK2)"],["DK3","Deficiencia de potasio (DK3)"],["DK4","Deficiencia de potasio (DK4)"],["PNI","Plaga defoliadora no identificada y en observación (PNI)"],["HOR","Hormigas arrieras o cortadoras (zompopas) (HOR)"],["OPC","Opsiphanes cassina (OPC)"],["SIM","Acharia hyperoche (Sibine megasonoides) (SIM)"],["SIF","Sibine fusca (SIF)"],["OIK","Oiketicus kirby (OIK)"],["STC","Stenoma cecropia (STC)"],["AUT","Automeris sp. (AUT)"],["REE","Ácaros: Retracrus elaeidis (REE)"],["CCH","Chinches chupadores (CCH)"],["CHA","Saltamontes o chapulines (CHA)"],["CIG","Chupadores homópteros (cigarras) (CIG)"],["CCN","Cochinillas (CCN)"],["RHP","Rhynchophorus palmarum (RHP)"],["STA","Strategus aloeus (STA)"],["RHB","Rhinosthomus barbirostrib (RHB)"],["CYD","Cyparissius (Castnia) daedaus (CYD)"],["SAV","Sagalassa valida (SAV)"],["DUA","Durrantia sp. (DUA)"],["RAT","Ratas (RAT)"],["GAN","Daño por ganado (GAN)"],["CER","Daño por cerdos (CER)"],["ORT","Taltuzas (ORT)"],["CAP","Otros Roedores (capibaras) (CAP)"],["PER","Aves treapadoras (periquitos) (PER)"],["ZOP","Daño por zopilotes (ZOP)"],["DAR","Daño por ardilas (DAR)"],["ADA","Arbol dentro de area"],["DCV","Doblamiento de la corona por viento"],["ARF","Arqueo foliar"],["HORR","Hormigas recuperando"]];
 
 /* ---------- Catalogs ---------- */
@@ -232,7 +233,8 @@ var XLSX_MIME = 'application/vnd.openxmlformats-officedocument.spreadsheetml.she
 /* ---------- State ---------- */
 /* Base row = [hilera, palma, prevCode, prevObs, extra]. Mark = [code, extras, note, date, evaluator, ts]. */
 var base = null, G = [], GBYDOC = {}, TOTAL = 0, PREV = '';
-var cfg = { evaluador: '', survey: '', names: [] };
+var bases = [];   /* [{id, name}]; the first base ever loaded keeps id '' and the original storage keys */
+var cfg = { evaluador: '', survey: '', names: [], base: '' };
 var V = { name: 'home', g: 0, hi: 0, rev: false };
 var M = [];
 var lastExport = 0;
@@ -365,21 +367,31 @@ function loadCfg() {
   cfg.evaluador = typeof c.evaluador === 'string' ? c.evaluador : '';
   cfg.survey = /^\d{4}-\d{2}$/.test(c.survey || '') ? c.survey : thisMonth();
   cfg.names = Array.isArray(c.names) ? c.names.filter(function (x) { return typeof x === 'string'; }).slice(0, 12) : [];
+  cfg.base = typeof c.base === 'string' ? c.base : '';
 }
 function saveCfg() { lsSet('sfs:cfg', JSON.stringify(cfg)); }
-function saveView() { lsSet('sfs:view', JSON.stringify(V)); }
+function saveView() { var v = { name: V.name, g: V.g, hi: V.hi, rev: V.rev, b: cfg.base }; lsSet('sfs:view', JSON.stringify(v)); }
 function restoreView() {
   var v = parse(lsGet('sfs:view'), null);
-  if (v && v.name === 'centro' && G[v.g] && G[v.g].groups[v.hi]) { V = { name: 'centro', g: v.g, hi: v.hi, rev: !!v.rev }; }
+  if (v && v.name === 'centro' && (v.b || '') === cfg.base && G[v.g] && G[v.g].groups[v.hi]) { V = { name: 'centro', g: v.g, hi: v.hi, rev: !!v.rev }; }
   else { V = { name: 'home', g: 0, hi: 0, rev: false }; }
 }
-function mkey(g) { return 'm|' + cfg.survey + '|' + g.doc; }
+/* Storage keys per base. Each base keeps its own marks and export record, so two bases never mix. */
+function bk(id) { return id ? 'base|' + id : 'base'; }
+function mp(id, survey) { return id ? 'm|' + id + '|' + survey + '|' : 'm|' + survey + '|'; }
+function xk(id, survey) { return id ? 'x|' + id + '|' + survey : 'x|' + survey; }
+function baseName() { for (var i = 0; i < bases.length; i++) { if (bases[i].id === cfg.base) { return bases[i].name; } } return ''; }
+function suggestName(b) {
+  var c = {}, best = '', n = 0;
+  ((b && b.groups) || []).forEach(function (g) { var m = String(g.exp || '').match(/^CB(\d\d)/i); if (m) { c[m[1]] = (c[m[1]] || 0) + g.rows.length; if (c[m[1]] > n) { n = c[m[1]]; best = m[1]; } } });
+  return best ? 'Siembra 20' + best : '';
+}
 function loadMarks() {
-  var survey = cfg.survey;
-  return Promise.all([KV.prefix('m|' + survey + '|'), KV.get('x|' + survey)]).then(function (a) {
-    if (survey !== cfg.survey) { return; }
+  var survey = cfg.survey, id = cfg.base, pre = mp(id, survey);
+  return Promise.all([KV.prefix(pre), KV.get(xk(id, survey))]).then(function (a) {
+    if (survey !== cfg.survey || id !== cfg.base) { return; }
     var all = a[0] || {};
-    M = G.map(function (g) { var m = all['m|' + survey + '|' + g.doc]; return (m && typeof m === 'object' && !Array.isArray(m)) ? m : {}; });
+    M = G.map(function (g) { var m = all[pre + g.doc]; return (m && typeof m === 'object' && !Array.isArray(m)) ? m : {}; });
     lastExport = (a[1] && typeof a[1].t === 'number') ? a[1].t : 0;
     jReplay();
   });
@@ -391,7 +403,7 @@ function jWrite(j) { if (j.length) { lsSet('sfs:j', JSON.stringify(j)); } else {
 function jReplay() {
   var touched = {};
   jRead().forEach(function (e) {
-    if (!Array.isArray(e) || e[0] !== cfg.survey || !Array.isArray(e[3])) { return; }
+    if (!Array.isArray(e) || e[0] !== cfg.survey || (e[4] || '') !== cfg.base || !Array.isArray(e[3])) { return; }
     var g = GBYDOC[e[1]];
     if (!g) { return; }
     var cur = M[g.i][e[2]];
@@ -401,15 +413,15 @@ function jReplay() {
   Object.keys(touched).forEach(function (i) { saveGroup(touched[i]); });
 }
 function saveGroup(g, palmas) {
-  var survey = cfg.survey, doc = g.doc, stamp = Date.now();
+  var survey = cfg.survey, id = cfg.base, doc = g.doc, stamp = Date.now();
   if (palmas && palmas.length) {
     var j = jRead();
-    palmas.forEach(function (p) { j.push([survey, doc, p, M[g.i][p]]); });
+    palmas.forEach(function (p) { j.push([survey, doc, p, M[g.i][p], id]); });
     jWrite(j);
   }
-  return KV.set('m|' + survey + '|' + doc, M[g.i]).then(function () {
+  return KV.set(mp(id, survey) + doc, M[g.i]).then(function () {
     storeOk = true;
-    jWrite(jRead().filter(function (e) { return !(Array.isArray(e) && e[0] === survey && e[1] === doc && Array.isArray(e[3]) && e[3][5] <= stamp); }));
+    jWrite(jRead().filter(function (e) { return !(Array.isArray(e) && e[0] === survey && (e[4] || '') === id && e[1] === doc && Array.isArray(e[3]) && e[3][5] <= stamp); }));
   }, function () {
     storeOk = false; toast('No se pudo guardar en el teléfono. No cierre la app y exporte el Excel.'); renderStatus();
   });
@@ -424,6 +436,13 @@ function askPersist() {
 function makeRec(code, extras, note) { return [code, extras || '', note || '', today(), cfg.evaluador, Date.now()]; }
 
 /* ---------- Base ---------- */
+function switchBase(id) {
+  KV.get(bk(id)).then(function (b) {
+    if (!b || !b.groups) { toast('No se encontró esa base en el teléfono.'); render(); return; }
+    cfg.base = id; saveCfg(); setBase(b); V = { name: 'home', g: 0, hi: 0, rev: false };
+    return loadMarks().then(function () { render(); document.getElementById('main').scrollTop = 0; });
+  });
+}
 function setBase(b) {
   base = b; TOTAL = 0; GBYDOC = {};
   PREV = (b && b.label) || 'Anterior';
@@ -486,7 +505,9 @@ function renderHome() {
   }).join('');
   document.getElementById('head').innerHTML =
     '<div class="titles"><div class="eyebrow">Censo fitosanitario</div><h1 class="h1">Survey Flecha Seca</h1></div>' +
-    '<div class="head-ctl"><select class="ctl" id="survey-select" aria-label="Mes del survey">' + opts + '</select>' +
+    '<div class="head-ctl">' + (bases.length > 1 ? '<select class="ctl wide" id="base-select" aria-label="Base">' + bases.map(function (b) {
+      return '<option value="' + esc(b.id) + '"' + (b.id === cfg.base ? ' selected' : '') + '>' + esc(b.name) + '</option>';
+    }).join('') + '</select>' : '') + '<select class="ctl" id="survey-select" aria-label="Mes del survey">' + opts + '</select>' +
     '<button type="button" class="ctl" data-act="eval">' + (cfg.evaluador ? esc(cfg.evaluador) : 'Elegir evaluador') + '</button></div>' +
     progHtml(done, TOTAL, 'palmas');
   var lotes = {}, order = [];
@@ -533,7 +554,7 @@ function renderCentro() {
   document.getElementById('head').innerHTML =
     '<div class="head-top"><button type="button" class="back" data-act="home" aria-label="Volver a los centros">' + icon(I_BACK, 24) + '</button>' +
     '<div class="titles"><h1 class="h1">Lote ' + esc(g.lote) + ' · Centro ' + esc(g.centro) + '</h1>' +
-    '<div class="sub">' + esc(g.exp) + ' · ' + esc(surveyLabel(cfg.survey)) + (cfg.evaluador ? ' · ' + esc(cfg.evaluador) : '') + '</div></div></div>' +
+    '<div class="sub">' + (bases.length > 1 ? esc(baseName()) + ' · ' : '') + esc(g.exp) + ' · ' + esc(surveyLabel(cfg.survey)) + (cfg.evaluador ? ' · ' + esc(cfg.evaluador) : '') + '</div></div></div>' +
     progHtml(countDone(g), g.rows.length, 'revisadas') + chips;
   var doneH = countDone(g, gr.idx);
   var html = '<div class="tool"><div class="info">' + (gr.h == null ? 'Todas las hileras' : 'Hilera ' + gr.h) + ' · ' + doneH + ' de ' + gr.idx.length + '</div>' +
@@ -657,18 +678,19 @@ function renderSheet() {
       '<button type="button" class="btn' + (s.canShare ? ' sec2' : '') + '" data-act="exp-save"' + dis + '>Descargar</button></div>';
   } else if (s.type === 'opts') {
     h = shTop('Opciones', 'Versión ' + APP_VERSION) +
-      '<div class="kv"><div><span>Base cargada</span><b style="font-family:inherit;font-size:16px">' + esc(PREV) + ' · ' + fmt(TOTAL) + ' palmas</b></div>' +
+      '<div class="kv"><div><span>Base abierta</span><b style="font-family:inherit;font-size:16px">' + esc(baseName()) + '<br>' + esc(PREV) + ' · ' + fmt(TOTAL) + ' palmas</b></div>' +
       '<div><span>Abre sin internet</span>' + yn(offlineReady, 'Sí', 'Todavía no') + '</div>' +
       '<div><span>Datos protegidos en el teléfono</span>' + yn(persisted === true, 'Sí', 'No confirmado') + '</div></div>' +
       '<button type="button" class="btn sec2" data-act="pick-import">Importar archivo de otro teléfono</button>' +
-      '<button type="button" class="btn sec2" data-act="pick-base">Cargar otra base</button>' +
+      '<button type="button" class="btn sec2" data-act="pick-replace">Actualizar esta base</button>' +
+      '<button type="button" class="btn sec2" data-act="pick-add">Agregar otra base</button>' +
       (updateReady ? '<button type="button" class="btn" data-act="reload">Actualizar la app</button>' : '') +
       (installEvt ? '<button type="button" class="btn" data-act="install">Instalar en este teléfono</button>'
         : '<div class="note">Para instalarla, abra el menú de Chrome (los tres puntos) y toque "Agregar a pantalla principal" o "Instalar app".</div>') +
-      (cfg.evaluador ? '<button type="button" class="del" data-act="wipe">Borrar las marcas de ' + esc(cfg.evaluador) + ' en ' + esc(surveyLabel(cfg.survey)) + '</button>' : '');
+      (cfg.evaluador ? '<button type="button" class="del" data-act="wipe">Borrar las marcas de ' + esc(cfg.evaluador) + ' en ' + esc(surveyLabel(cfg.survey)) + (bases.length > 1 ? ' (' + esc(baseName()) + ')' : '') + '</button>' : '');
   } else if (s.type === 'wipe') {
     var w = wipeCount();
-    h = shTop('Borrar marcas', esc(cfg.evaluador) + ' · ' + esc(surveyLabel(cfg.survey)));
+    h = shTop('Borrar marcas', esc(cfg.evaluador) + ' · ' + esc(surveyLabel(cfg.survey)) + (bases.length > 1 ? ' · ' + esc(baseName()) : ''));
     if (!w.n) {
       h += '<div class="note">No hay palmas marcadas por ' + esc(cfg.evaluador) + ' en este mes.</div>';
     } else {
@@ -688,11 +710,13 @@ function renderSheet() {
           return '<button type="button" data-act="sheet-pick" data-i="' + x.i + '"><span class="big">' + esc(x.n) + '</span></button>';
         }).join('') + '</div>';
   } else if (s.type === 'base-ok') {
-    h = shTop('Usar esta base', esc(s.file)) +
+    h = shTop(s.mode === 'add' && bases.length ? 'Agregar base' : s.mode === 'replace' ? 'Actualizar base' : 'Usar esta base', esc(s.file)) +
+      '<div class="field"><label for="base-name">Nombre de la base</label><input class="inp" id="base-name" type="text" autocomplete="off" maxlength="40" placeholder="Ej.: Siembra 2025" value="' + esc(s.name || '') + '"></div>' +
       '<div class="kv"><div><span>Palmas</span><b>' + fmt(s.base.n) + '</b></div><div><span>Centros</span><b>' + s.base.groups.length + '</b></div>' +
       '<div><span>Estado de referencia</span><b style="font-family:inherit;font-size:16px">' + esc(s.base.label) + '</b></div></div>' +
       (s.base.dups ? '<div class="note warn">' + s.base.dups + ' filas repetidas se dejaron fuera.</div>' : '') +
-      (base ? '<div class="note">Las palmas que ya marcó se conservan. Solo cambia la lista y el estado de referencia.</div>' : '');
+      (s.mode === 'replace' ? '<div class="note">Las palmas que ya marcó en esta base se conservan. Solo cambia la lista y el estado de referencia.</div>'
+        : bases.length ? '<div class="note">Queda como una base aparte: sus marcas y su Excel no se mezclan con las otras. Se cambia de base arriba, en la pantalla principal.</div>' : '');
     f = '<div class="btns"><button type="button" class="btn sec2" data-act="close">Cancelar</button><button type="button" class="btn" data-act="base-ok">Usar esta base</button></div>';
   } else if (s.type === 'import-ok') {
     var p2 = s.plan;
@@ -702,6 +726,7 @@ function renderSheet() {
       '<div><span>Ya estaban iguales</span><b>' + fmt(p2.same) + '</b></div>' +
       '<div><span>Se conserva lo de este teléfono</span><b>' + fmt(p2.kept) + '</b></div>' +
       (p2.unknown ? '<div><span>No están en la base</span><b>' + fmt(p2.unknown) + '</b></div>' : '') + '</div>' +
+      (p2.unknown && p2.unknown >= p2.add.length + p2.upd.length + p2.same + p2.kept ? '<div class="note warn">La mayoría de las palmas de este archivo no están en la base <b>' + esc(baseName()) + '</b>. Si es de otra base, cancele y cambie de base arriba antes de importar.</div>' : '') +
       (p2.otherMonth ? '<div class="note warn">Las fechas del archivo son de <b>' + esc(p2.otherMonth) + '</b> y el survey abierto es <b>' + esc(surveyLabel(cfg.survey)) + '</b>. Revise que sea el archivo correcto.</div>' : '');
     f = '<div class="btns"><button type="button" class="btn sec2" data-act="close">Cancelar</button><button type="button" class="btn" data-act="import-ok"' +
       (p2.add.length + p2.upd.length ? '' : ' disabled') + '>' + (p2.otherMonth ? 'Importar igual' : 'Importar') + '</button></div>';
@@ -744,7 +769,7 @@ function wipeCount() {
 }
 function doWipe() {
   var ev = cfg.evaluador, survey = cfg.survey, n = 0, saves = [];
-  jWrite(jRead().filter(function (e) { return !(Array.isArray(e) && e[0] === survey && Array.isArray(e[3]) && e[3][4] === ev); }));
+  jWrite(jRead().filter(function (e) { return !(Array.isArray(e) && e[0] === survey && (e[4] || '') === cfg.base && Array.isArray(e[3]) && e[3][4] === ev); }));
   G.forEach(function (g) {
     var m = M[g.i], touched = false;
     for (var k in m) { var r = m[k]; if (r && r[4] === ev) { if (r[0]) { n++; } delete m[k]; touched = true; } }
@@ -920,7 +945,7 @@ function prepareExport() {
   if (!s || s.type !== 'export') { return; }
   s.file = null; s.share = null; s.msg = ''; s.err = false; s.token = (s.token || 0) + 1;
   var token = s.token, label = surveyLabel(cfg.survey);
-  var who = cfg.evaluador ? '_' + cfg.evaluador.replace(/[^A-Za-z0-9]+/g, '') : '';
+  var who = (baseName() ? '_' + baseName().replace(/[^A-Za-z0-9]+/g, '') : '') + (cfg.evaluador ? '_' + cfg.evaluador.replace(/[^A-Za-z0-9]+/g, '') : '');
   var stem = 'Survey_FS_' + label.replace(' ', '_') + who, filename = stem + '.xlsx';
   renderSheet();
   setTimeout(function () {
@@ -945,7 +970,7 @@ function prepareExport() {
 }
 function markExported(s, name) {
   lastExport = Date.now();
-  KV.set('x|' + cfg.survey, { t: lastExport }).catch(function () {});
+  KV.set(xk(cfg.base, cfg.survey), { t: lastExport }).catch(function () {});
   s.msg = 'Listo: ' + (name || s.file.name); s.err = false;
   if (sheet === s) { renderSheet(); }
   render();
@@ -1101,7 +1126,7 @@ function planImport(tab) {
 }
 function fail(msg) { openSheet({ type: 'msg', title: 'No se pudo leer', msg: msg, err: true }); }
 function handleFile(file) {
-  var purpose = (!base || filePurpose === 'base') ? 'base' : 'import';
+  var purpose = !base ? 'add' : (filePurpose === 'import' ? 'import' : filePurpose);
   openSheet({ type: 'busy', title: 'Leyendo el archivo', msg: file.name });
   file.arrayBuffer().then(function (buf) {
     var u = new Uint8Array(buf, 0, Math.min(2, buf.byteLength));
@@ -1115,7 +1140,10 @@ function handleFile(file) {
       return wb.rows(i).then(function (aoa) {
         var tab = tableOf(aoa);
         if (!tab || !tab.recs.length) { fail('"' + wb.sheets[i].name + '" no trae las columnas LOTE, CENTRO, EXPERIMENTO, PALMA y COD. ENF.'); return; }
-        if (purpose === 'base') { openSheet({ type: 'base-ok', base: buildBase(tab, file.name), file: file.name }); }
+        if (purpose !== 'import') {
+          var nb = buildBase(tab, file.name);
+          openSheet({ type: 'base-ok', base: nb, file: file.name, mode: purpose, name: purpose === 'replace' ? baseName() : (suggestName(nb) || '') });
+        }
         else { openSheet({ type: 'import-ok', plan: planImport(tab), file: file.name }); }
       });
     };
@@ -1182,13 +1210,23 @@ document.addEventListener('click', function (ev) {
       }
       break;
     case 'opts': openSheet({ type: 'opts' }); break;
-    case 'pick-base': filePurpose = 'base'; input.value = ''; input.click(); break;
+    case 'pick-base': case 'pick-add': filePurpose = 'add'; input.value = ''; input.click(); break;
+    case 'pick-replace': filePurpose = 'replace'; input.value = ''; input.click(); break;
     case 'pick-import': filePurpose = 'import'; input.value = ''; input.click(); break;
     case 'sheet-pick': s.use(+t.getAttribute('data-i')).catch(function () { fail('No se pudo leer esa hoja.'); }); break;
     case 'base-ok':
-      var nb = s.base;
+      var nb = s.base, nm = ((document.getElementById('base-name') || {}).value || '').replace(/\s+/g, ' ').trim();
+      if (!nm) { toast('Escriba un nombre para la base.'); break; }
+      var rid = s.mode === 'replace' ? cfg.base : (bases.length ? 'b' + Date.now().toString(36) : '');
+      if (bases.some(function (b) { return b.name.toLowerCase() === nm.toLowerCase() && b.id !== rid; })) { toast('Ya hay una base con ese nombre.'); break; }
       openSheet({ type: 'busy', title: 'Guardando la base', msg: '' });
-      KV.set('base', nb).then(function () {
+      KV.set(bk(rid), nb).then(function () {
+        var list = bases.filter(function (b) { return b.id !== rid; });
+        var at = bases.map(function (b) { return b.id; }).indexOf(rid);
+        list.splice(at === -1 ? list.length : at, 0, { id: rid, name: nm });
+        return KV.set('bases', list).then(function () { bases = list; });
+      }).then(function () {
+        cfg.base = rid; saveCfg();
         setBase(nb); V = { name: 'home', g: 0, hi: 0, rev: false };
         return loadMarks();
       }).then(function () {
@@ -1226,7 +1264,9 @@ document.addEventListener('input', function (ev) {
   }
 });
 document.addEventListener('change', function (ev) {
-  if (ev.target.id === 'survey-select') {
+  if (ev.target.id === 'base-select') {
+    switchBase(ev.target.value);
+  } else if (ev.target.id === 'survey-select') {
     cfg.survey = ev.target.value; saveCfg();
     loadMarks().then(render);
   } else if (ev.target.id === 'exp-only' && sheet && sheet.type === 'export') {
@@ -1244,7 +1284,19 @@ window.addEventListener('appinstalled', function () { installEvt = null; });
 /* ---------- Boot ---------- */
 loadCfg();
 renderNoBase();
-KV.get('base').then(function (b) {
+KV.get('bases').then(function (list) {
+  if (Array.isArray(list) && list.length) { return list; }
+  return KV.get('base').then(function (b) {
+    if (!b || !b.groups || !b.groups.length) { return []; }
+    var l = [{ id: '', name: suggestName(b) || 'Base 1' }];
+    return KV.set('bases', l).then(function () { return l; }, function () { return l; });
+  });
+}).then(function (list) {
+  bases = list.filter(function (x) { return x && typeof x.id === 'string' && typeof x.name === 'string'; });
+  if (!bases.length) { return null; }
+  if (!bases.some(function (x) { return x.id === cfg.base; })) { cfg.base = bases[0].id; saveCfg(); }
+  return KV.get(bk(cfg.base));
+}).then(function (b) {
   if (!b || !b.groups || !b.groups.length) { return; }
   setBase(b); restoreView();
   return loadMarks().then(function () {
